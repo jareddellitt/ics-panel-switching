@@ -2,17 +2,18 @@
 
     function PanelManager(target) {
         this.target = $(target);
-        this.lists = $(this.target.find('ul'));
         this.panels = [];
         this.index = 0;
         this.direction = null;
-        
-        this.LEFT = 'left';
-        this.RIGHT = 'right';
     }
 
+    PanelManager.prototype.directions = {
+        RIGHT: 'right',
+        LEFT: 'left'
+    };
+
     PanelManager.prototype.init = function () {
-        var manager = this;
+        var panels = this.panels;
 
         this.target
             .on('mousedown touchstart', $.proxy(this.handleDown, this))
@@ -20,11 +21,10 @@
             .on('a', 'touchstart click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
+            })
+            .find('ul').each(function (i, list) {
+                panels.push(new Panel(list));
             });
-
-        this.lists.each(function (i, list) {
-            manager.panels.push(new Panel(list));
-        });
     };
 
     PanelManager.prototype.previous = function () {
@@ -47,14 +47,14 @@
         if (amount < 0) {
             var next = this.next()
             if (next) {
-                this.direction = this.LEFT; 
+                this.direction = this.directions.LEFT; 
                 this.current().move(amount);
                 next.updateVisibility((amount * -1) / this.target.width());
             }
         } else {
             var prev = this.previous();
             if (prev) {
-                this.direction = this.RIGHT;
+                this.direction = this.directions.RIGHT;
                 this.current().updateVisibility(1 - (amount / this.target.width()));            
                 prev.move(amount);
             }
@@ -68,9 +68,8 @@
         this.target.on('mousemove touchmove', $.proxy(this.handleMove, this));  
     };
 
-    PanelManager.prototype.handleMovedLeft = function () {
-        var current = this.current(),
-            next = this.next();
+    PanelManager.prototype.doneMovingLeft = function () {
+        var current = this.current();
 
         if (current.offsetLeft() >= this.target.width() / 3) {
             current.hide();
@@ -86,9 +85,9 @@
         }        
     }
 
-    PanelManager.prototype.handleMovedRight = function () {
-        var current = this.current();
-        
+    PanelManager.prototype.doneMovingRight = function () {
+        var current;
+
         if (this.previous()) {
             this.index--;
             current = this.current();
@@ -103,11 +102,10 @@
     PanelManager.prototype.handleUp = function () {
         this.target.off('mousemove touchmove');
 
-        if (this.direction === this.LEFT) {
-            this.handleMovedLeft();
-            
-        } else if (this.direction === this.RIGHT) {
-            this.handleMovedRight();
+        if (this.direction === this.directions.LEFT) {
+            this.doneMovingLeft();
+        } else if (this.direction === this.directions.RIGHT) {
+            this.doneMovingRight();
         }
     };
 
