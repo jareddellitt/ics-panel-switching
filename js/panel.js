@@ -3,7 +3,21 @@ function Panel(panel) {
     this.current = 0;
     this.width = this.panel.width();
 
-    if (this.panel.index() > 0) {
+    var index = this.panel.index(),
+        numOthers = this.panel.siblings.length + 1;
+    
+    this.panel.css({
+        padding: 0,
+        margin: 0,
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,        
+        'z-index': numOthers - index
+    });
+    
+    if (index > 0) {    
         this.updateVisibility(0);
     }
 }

@@ -1,30 +1,34 @@
 (function (global) {
 
     function PanelManager(target) {
-        this.target = $(target);
         this.panels = [];
         this.index = 0;
         this.direction = null;
-    }
 
-    PanelManager.prototype.directions = {
-        RIGHT: 'right',
-        LEFT: 'left'
-    };
-
-    PanelManager.prototype.init = function () {
         var panels = this.panels;
 
-        this.target
+        this.target = $(target)
             .on('mousedown touchstart', $.proxy(this.handleDown, this))
             .on('mouseup touchend', $.proxy(this.handleUp, this))
             .on('a', 'touchstart click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
             })
+            .css({
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0                
+            })
             .find('ul').each(function (i, list) {
                 panels.push(new Panel(list));
-            });
+            });        
+    }
+
+    PanelManager.prototype.directions = {
+        RIGHT: 'right',
+        LEFT: 'left'
     };
 
     PanelManager.prototype.previous = function () {

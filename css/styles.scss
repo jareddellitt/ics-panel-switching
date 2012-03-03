@@ -6,11 +6,6 @@ body {
 }
 
 #apps {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
 
     ul {
         padding: 0;
@@ -32,7 +27,6 @@ body {
        }
 
         &.one {
-            z-index: 3;
 
             li {
                 .icon {
@@ -43,7 +37,6 @@ body {
 
 
         &.two {
-            z-index: 2;
 
             li {
                 .icon {
@@ -53,8 +46,7 @@ body {
         }
 
         &.three {
-            z-index: 1;
-            
+
             li {
                 .icon {
                     background: red;                    
