@@ -39,25 +39,33 @@
         return this.panels[this.index + 1];
     };
 
+    PanelManager.prototype.moveLeft = function (amount) {
+        var next = this.next()
+        if (next) {
+            this.direction = this.directions.LEFT; 
+            this.current().move(amount);
+            next.updateVisibility((amount * -1) / this.target.width());
+        }
+    };
+
+    PanelManager.prototype.moveRight = function (amount) {
+        var prev = this.previous();
+        if (prev) {
+            this.direction = this.directions.RIGHT;
+            this.current().updateVisibility(1 - (amount / this.target.width()));            
+            prev.move(amount);
+        }
+    };
+
     PanelManager.prototype.handleMove = function (e) { 
         e.preventDefault();
         var x = e.clientX || e.originalEvent.touches[0].clientX,
             amount = (this.startX - x) * -1;
 
         if (amount < 0) {
-            var next = this.next()
-            if (next) {
-                this.direction = this.directions.LEFT; 
-                this.current().move(amount);
-                next.updateVisibility((amount * -1) / this.target.width());
-            }
+            this.moveLeft(amount);
         } else {
-            var prev = this.previous();
-            if (prev) {
-                this.direction = this.directions.RIGHT;
-                this.current().updateVisibility(1 - (amount / this.target.width()));            
-                prev.move(amount);
-            }
+            this.moveRight(amount);
         }
     };
 

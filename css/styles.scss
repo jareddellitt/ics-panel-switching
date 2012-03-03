@@ -20,11 +20,6 @@ body {
         right: 0;
         top: 0;
         bottom: 0;
-        -webkit-transition: left 300ms ease-out;
-
-        &.off-screen {
-            left: -1000px;
-        }
 
         li {
             padding: 10px;
@@ -59,6 +54,7 @@ body {
 
         &.three {
             z-index: 1;
+            
             li {
                 .icon {
                     background: red;                    
